@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import "./styles.css";
 import Bar from "./components/Bar";
 import { calculateSalaryFrom } from "./salary";
+import InputReadOnly from "./components/InputReadOnly";
 
 export default class App extends Component {
   constructor() {
@@ -31,15 +32,20 @@ export default class App extends Component {
       netSalary,
     } = calculateSalaryFrom(fullSalary);
 
+    const percentDiscountINSS = ((discountINSS / fullSalary) * 100).toFixed(2);
+    const percentDiscountIRPF = ((discountIRPF / fullSalary) * 100).toFixed(2);
+    const percentSalary = ((netSalary / fullSalary) * 100).toFixed(2);
+
     return (
       <div className="container">
         <h1>React Salario</h1>
 
         <div className="row">
           <div className="input-field col s12">
+            <label class="active">Salário Bruto</label>
             <input
               placeholder="Salario Bruto"
-              id="first_name"
+              id="salario_bruto"
               type="number"
               className="validate"
               value={fullSalary}
@@ -49,62 +55,29 @@ export default class App extends Component {
         </div>
 
         <div className="row">
-          <div className="input-field col s3">
-            <input
-              placeholder="Base Inss"
-              id="base_inss"
-              type="number"
-              className="validate"
-              value={baseINSS}
-            />
-          </div>
-          <div className="input-field col s3">
-            <input
-              placeholder="Desconto Inss"
-              id="desconto_inss"
-              type="text"
-              className="validate"
-              value={`${discountINSS} (${(
-                (discountINSS / fullSalary) *
-                100
-              ).toFixed(2)})`}
-            />
-          </div>
-          <div className="input-field col s3">
-            <input
-              placeholder="Base IRPF"
-              id="base_irpf"
-              type="text"
-              className="validate"
-              value={baseIRPF}
-            />
-          </div>
-          <div className="input-field col s3">
-            <input
-              placeholder="Desconto IRPF"
-              id="desconto_irpf"
-              type="text"
-              className="validate"
-              value={`${discountIRPF} (${(
-                (discountIRPF / fullSalary) *
-                100
-              ).toFixed(2)})`}
-            />
-          </div>
+          <InputReadOnly value={baseINSS} label={"Base Inss"} />
+          <InputReadOnly
+            color={"#e67e22"}
+            value={`${discountINSS}`}
+            percentual={`(${percentDiscountINSS}%)`}
+            label={"Desconto Inss"}
+          />
+          <InputReadOnly value={baseIRPF} label={"Base IRPF"} />
+          <InputReadOnly
+            color={"#c0392b"}
+            value={`${discountIRPF}`}
+            percentual={`(${percentDiscountIRPF}%)`}
+            label={"Desconto IRPF"}
+          />
         </div>
 
         <div className="row">
-          <div className="input-field col s3">
-            <input
-              placeholder="Salario Liquido"
-              id="first_name"
-              type="text"
-              className="validate"
-              value={`${netSalary} (${((netSalary / fullSalary) * 100).toFixed(
-                2
-              )})`}
-            />
-          </div>
+          <InputReadOnly
+            color={"#16a085"}
+            value={`${netSalary}`}
+            percentual={`(${percentSalary}%)`}
+            label={"Salário Liquido"}
+          />
         </div>
 
         <div
@@ -115,8 +88,9 @@ export default class App extends Component {
             justifyContent: "center",
           }}
         >
-          <Bar value={50} color="red" />
-          <Bar value={50} color="green" />
+          <Bar value={percentDiscountINSS} color="#e67e22" />
+          <Bar value={percentDiscountIRPF} color="#c0392b" />
+          <Bar value={percentSalary} color="#16a085" />
         </div>
       </div>
     );
